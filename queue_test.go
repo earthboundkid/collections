@@ -6,19 +6,6 @@ import (
 	"github.com/carlmjohnson/collections"
 )
 
-func NewStringsDeque(ss *[]string) *collections.DequeManager {
-	return collections.NewDeque(
-		len(*ss),
-		func(pivot int) int {
-			ns := make([]string, len(*ss)*2+1)
-			copied := copy(ns, (*ss)[pivot:])
-			copy(ns[copied:], (*ss)[:pivot])
-			*ss = ns
-			return len(ns)
-		},
-	)
-}
-
 func output(ss []string, dm *collections.DequeManager) {
 	hi, ti, hv, tv := dm.Head(), dm.Tail(), "", ""
 	if hi != -1 {
@@ -31,7 +18,14 @@ func output(ss []string, dm *collections.DequeManager) {
 
 func ExampleDequeManager() {
 	var ss []string
-	deque := NewStringsDeque(&ss)
+	deque := collections.NewDeque(0, func(pivot int) int {
+		ns := make([]string, len(ss)*2+1)
+		copied := copy(ns, (ss)[pivot:])
+		copy(ns[copied:], (ss)[:pivot])
+		ss = ns
+		return len(ns)
+	})
+
 	output(ss, deque)
 	ss[deque.PushTail()] = "hello"
 	output(ss, deque)
