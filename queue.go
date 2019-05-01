@@ -33,15 +33,26 @@ func (dm *DequeManager) Tail() int {
 	return (dm.pivot + dm.length - 1) % dm.capacity
 }
 
-func (dm *DequeManager) maybeGrow() {
+func (dm *DequeManager) maybeGrow() bool {
 	if dm.length == dm.capacity {
-		dm.capacity = dm.grow(dm.pivot)
+		newcap := dm.grow(dm.pivot)
+		if newcap < dm.capacity {
+			panic(fmt.Errorf("bad growth capacity for DequeManager: %d < %d",
+				newcap, dm.capacity))
+		}
+		if newcap == -1 {
+			return false
+		}
+		dm.capacity = newcap
 		dm.pivot = 0
 	}
+	return true
 }
 
 func (dm *DequeManager) PushHead() int {
-	dm.maybeGrow()
+	if !dm.maybeGrow() {
+		return -1
+	}
 	dm.length++
 	dm.pivot -= 1
 	if dm.pivot < 0 {
@@ -51,7 +62,9 @@ func (dm *DequeManager) PushHead() int {
 }
 
 func (dm *DequeManager) PushTail() int {
-	dm.maybeGrow()
+	if !dm.maybeGrow() {
+		return -1
+	}
 	dm.length++
 	return dm.Tail()
 }
