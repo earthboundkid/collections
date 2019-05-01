@@ -1,6 +1,9 @@
 package collections
 
-import "fmt"
+import (
+	"fmt"
+	"reflect"
+)
 
 type DequeManager struct {
 	grow                    func(pivot int) (capacity int)
@@ -89,4 +92,24 @@ func (dm *DequeManager) PopTail() int {
 	tail := dm.Tail()
 	dm.length--
 	return tail
+}
+
+func NewDequeForSlice(slicepointer interface{}) *DequeManager {
+	value := reflect.ValueOf(slicepointer)
+	if value.Kind() != reflect.Ptr {
+		panic("slicepointer must be a pointer to a slice")
+	}
+	slice := value.Elem()
+	if !slice.IsValid() || slice.Kind() != reflect.Slice {
+		panic("slicepointer must be a pointer to a slice")
+	}
+	return NewDeque(slice.Len(), func(pivot int) int {
+		newcap := slice.Len()*2 + 1
+		ns := reflect.MakeSlice(slice.Type(), newcap, newcap)
+		copied := reflect.Copy(ns, slice.Slice(pivot, slice.Len()))
+		reflect.Copy(ns.Slice(copied, newcap), slice.Slice(0, pivot))
+		slice = ns
+		value.Elem().Set(ns)
+		return newcap
+	})
 }

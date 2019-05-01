@@ -46,3 +46,27 @@ func ExampleDequeManager() {
 	// !!
 	// Head: 1 "hello" Tail: 2 "world" Strings: [¡¡ hello world !!   ]
 }
+
+func ExampleNewDequeForSlice() {
+	var ss []string
+	deque := collections.NewDequeForSlice(&ss)
+	output(ss, deque)
+	ss[deque.PushTail()] = "hello"
+	output(ss, deque)
+	ss[deque.PushTail()] = "world"
+	output(ss, deque)
+	ss[deque.PushHead()] = "¡¡"
+	ss[deque.PushTail()] = "!!"
+	output(ss, deque)
+	fmt.Println(ss[deque.PopHead()])
+	fmt.Println(ss[deque.PopTail()])
+	output(ss, deque)
+	// Output:
+	// Head: -1 "" Tail: -1 "" Strings: []
+	// Head: 0 "hello" Tail: 0 "hello" Strings: [hello]
+	// Head: 0 "hello" Tail: 1 "world" Strings: [hello world ]
+	// Head: 0 "¡¡" Tail: 3 "!!" Strings: [¡¡ hello world !!   ]
+	// ¡¡
+	// !!
+	// Head: 1 "hello" Tail: 2 "world" Strings: [¡¡ hello world !!   ]
+}
