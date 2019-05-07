@@ -5,6 +5,7 @@ import (
 	"sort"
 )
 
+// SortedKeys takes a map[string]T and returns a sorted slice of keys.
 func SortedKeys(m interface{}) []string {
 	value := reflect.ValueOf(m)
 	if value.Kind() != reflect.Map {
