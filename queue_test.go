@@ -6,16 +6,6 @@ import (
 	"github.com/carlmjohnson/collections"
 )
 
-func output(ss []string, dm *collections.DequeManager) {
-	hi, ti, hv, tv := dm.Head(), dm.Tail(), "", ""
-	if hi != -1 {
-		hv = ss[hi]
-		tv = ss[ti]
-	}
-	fmt.Printf("Head: %d %q Tail: %d %q Strings: %v\n",
-		hi, hv, ti, tv, ss)
-}
-
 func ExampleDequeManager() {
 	var ss []string
 	deque := collections.NewDeque(0, func(pivot int) int {
@@ -26,47 +16,46 @@ func ExampleDequeManager() {
 		return len(ns)
 	})
 
-	output(ss, deque)
+	fmt.Printf("%q %v\n", ss, deque)
 	ss[deque.PushTail()] = "hello"
-	output(ss, deque)
+	fmt.Printf("%q %v\n", ss, deque)
 	ss[deque.PushTail()] = "world"
-	output(ss, deque)
-	ss[deque.PushHead()] = "¡¡"
-	ss[deque.PushTail()] = "!!"
-	output(ss, deque)
-	fmt.Println(ss[deque.PopHead()])
-	fmt.Println(ss[deque.PopTail()])
-	output(ss, deque)
+	fmt.Printf("%q %v\n", ss, deque)
+	fmt.Printf("%q %q %v\n", ss[deque.PopHead()], ss, deque)
+	ss[deque.PushHead()] = ","
+	ss[deque.PushHead()] = "Hello"
+	fmt.Printf("%q %v\n", ss, deque)
+	ss[deque.PushTail()] = "!"
+	fmt.Printf("%q %v\n", ss, deque)
 	// Output:
-	// Head: -1 "" Tail: -1 "" Strings: []
-	// Head: 0 "hello" Tail: 0 "hello" Strings: [hello]
-	// Head: 0 "hello" Tail: 1 "world" Strings: [hello world ]
-	// Head: 0 "¡¡" Tail: 3 "!!" Strings: [¡¡ hello world !!   ]
-	// ¡¡
-	// !!
-	// Head: 1 "hello" Tail: 2 "world" Strings: [¡¡ hello world !!   ]
+	// [] collections.DequeManager{head: -1, tail: -1, length: 0, pivot: 0}
+	// ["hello"] collections.DequeManager{head: 0, tail: 0, length: 1, pivot: 0}
+	// ["hello" "world" ""] collections.DequeManager{head: 0, tail: 1, length: 2, pivot: 0}
+	// "hello" ["hello" "world" ""] collections.DequeManager{head: 1, tail: 1, length: 1, pivot: 1}
+	// ["," "world" "Hello"] collections.DequeManager{head: 2, tail: 1, length: 3, pivot: 2}
+	// ["Hello" "," "world" "!" "" "" ""] collections.DequeManager{head: 0, tail: 3, length: 4, pivot: 0}
 }
 
 func ExampleNewDequeForSlice() {
 	var ss []string
 	deque := collections.NewDequeForSlice(&ss)
-	output(ss, deque)
+
+	fmt.Printf("%q %v\n", ss, deque)
 	ss[deque.PushTail()] = "hello"
-	output(ss, deque)
+	fmt.Printf("%q %v\n", ss, deque)
 	ss[deque.PushTail()] = "world"
-	output(ss, deque)
-	ss[deque.PushHead()] = "¡¡"
-	ss[deque.PushTail()] = "!!"
-	output(ss, deque)
-	fmt.Println(ss[deque.PopHead()])
-	fmt.Println(ss[deque.PopTail()])
-	output(ss, deque)
+	fmt.Printf("%q %v\n", ss, deque)
+	fmt.Printf("%q %q %v\n", ss[deque.PopHead()], ss, deque)
+	ss[deque.PushHead()] = ","
+	ss[deque.PushHead()] = "Hello"
+	fmt.Printf("%q %v\n", ss, deque)
+	ss[deque.PushTail()] = "!"
+	fmt.Printf("%q %v\n", ss, deque)
 	// Output:
-	// Head: -1 "" Tail: -1 "" Strings: []
-	// Head: 0 "hello" Tail: 0 "hello" Strings: [hello]
-	// Head: 0 "hello" Tail: 1 "world" Strings: [hello world ]
-	// Head: 0 "¡¡" Tail: 3 "!!" Strings: [¡¡ hello world !!   ]
-	// ¡¡
-	// !!
-	// Head: 1 "hello" Tail: 2 "world" Strings: [¡¡ hello world !!   ]
+	// [] collections.DequeManager{head: -1, tail: -1, length: 0, pivot: 0}
+	// ["hello"] collections.DequeManager{head: 0, tail: 0, length: 1, pivot: 0}
+	// ["hello" "world" ""] collections.DequeManager{head: 0, tail: 1, length: 2, pivot: 0}
+	// "hello" ["hello" "world" ""] collections.DequeManager{head: 1, tail: 1, length: 1, pivot: 1}
+	// ["," "world" "Hello"] collections.DequeManager{head: 2, tail: 1, length: 3, pivot: 2}
+	// ["Hello" "," "world" "!" "" "" ""] collections.DequeManager{head: 0, tail: 3, length: 4, pivot: 0}
 }

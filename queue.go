@@ -94,6 +94,12 @@ func (dm *DequeManager) PopTail() int {
 	return tail
 }
 
+func (dm *DequeManager) String() string {
+	return fmt.Sprintf("collections.DequeManager{head: %d, tail: %d, length: %d, pivot: %d}",
+		dm.Head(), dm.Tail(), dm.length, dm.pivot,
+	)
+}
+
 func NewDequeForSlice(slicepointer interface{}) *DequeManager {
 	value := reflect.ValueOf(slicepointer)
 	if value.Kind() != reflect.Ptr {
